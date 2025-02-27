@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お菓子の虜</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<h1>お菓子の虜デモ</h1>
+	<p>1996年から続いているコンビニお菓子情報「お菓子の虜」に掲載されている2000種以上のお菓子を、様々な検索軸で検索します。<br>
+	Powered by <a href="https://sysbird.jp/toriko/webapi/" title="お菓子の虜 WebAPI">お菓子の虜 WebAPI</a>
+	</p>
+	<div>
+		<h2>お菓子検索</h2>
+		<form action="/search" method="get">
+			<label for="keyword">キーワード:</label>
+			<input type="text" id="keyword" name="keyword" value="{% if keyword is defined %}{{ keyword }}{% endif %}">
+			<label for="year">掲載年:</label>
+			<input type="text" id="year" name="year" value="{% if year is defined %}{{ year }}{% endif %}">
+			<label for="type">お菓子の種類:</label>
+			<select id="type" name="type">
+        		<option value="" {% if type is defined and type is same as("") %}selected{% endif %}>選択してください</option>
+        		<option value="1" {% if type is defined and type is same as("1") %}selected{% endif %}>スナック</option>
+        		<option value="2" {% if type is defined and type is same as("2") %}selected{% endif %}>チョコレート</option>
+        		<option value="3" {% if type is defined and type is same as("3") %}selected{% endif %}>クッキー・洋菓子</option>
+        		<option value="4" {% if type is defined and type is same as("4") %}selected{% endif %}>飴・ガム</option>
+        		<option value="5" {% if type is defined and type is same as("5") %}selected{% endif %}>せんべい・和風</option>
+        		<option value="99" {% if type is defined and type is same as("99") %}selected{% endif %}>地域限定</option>
+    		</select>
+			<button type="submit">検索</button>
+		</form>
+	</div>
+	<div>
+		{% if items is defined %}
+		<p>検索条件: {% if keyword is defined %}{{ keyword }}{% endif %}&nbsp;
+		{% if year is not same as("") %}{{ year }}年{% endif %}&nbsp;
+		{% set types = ["スナック","チョコレート","クッキー・洋菓子","飴・ガム","せんべい・和風"] %}
+		{% if type is not same as("") %}{{ type == "99" ? "地域限定" : types[type - 1] }}{% endif %}&nbsp;
+		{% if offset >= 0 %}{{ offset }}件目 ~{% endif %}
+		</p>	
+		{% endif %}
+		<p>
+			{% if message %}
+				{{ message }}
+			{% endif %}
+		</p>
+		{% if type %}
+			{% for t in type %}
+				<p style='display:inline;'>{{ t.name }}</p>&nbsp;|&nbsp;
+			{% endfor %}
+		{% endif %}
+	</div>
+	<table>
+		<tr>
+			<td>商品名</td>
+			<td>メーカー</td>
+			<td>価格</td>
+			<td>写真</td>
+			<td>コメント</td>
+		</tr>
+		{% for item in items %}
+			<tr>
+				<td class="normal">{{ item.name }}</td>
+				<td class="small">{% if item.maker %}{{ item.maker }}{% endif %}</td>
+				<td class="small">{% if item.price %}￥{{ item.price }}{% endif %}</td>
+				<td><img src="{{ item.image }}" width="250" alt="{{ item.name }}"/></td>
+				<td>{{ item.comment|striptags }}</td>
+			</tr>
+		{% endfor %}
+	</table>
+	<div>
+	{% if offset is defined and max is defined %}
+	{% if offset - max >= 0 %}
+	<a href="/search?keyword={{ keyword }}&year={{ year }}&type={{ type }}&offset={{ offset - max }}">&lt;前のページ</a>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	{% endif %}
+	<a href="/search?keyword={{ keyword }}&year={{ year }}&type={{ type }}&offset={{ offset + max }}">次のページ&gt;</a>
+	{% endif %}
+	</div>
+</body>
+
+
