@@ -21,7 +21,7 @@ final class OkashiClient {
         ];
     }
 
-    public function getOkashi(string $keyword, string $year, int $type, int $count = 5, int $offset = 0): mixed
+    public function getOkashi(string $keyword, string $year, string $type, int $count = 5, int $offset = 0): mixed
     {
         if (!empty($keyword)) {
             $this->query['keyword'] = $keyword;

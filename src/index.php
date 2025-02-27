@@ -12,7 +12,7 @@ $builder->addDefinitions([
     OkashiClient::class => DI\autowire(OkashiClient::class),
     Twig::class => function() {
         return Twig::create(__DIR__ . '/okashinotoriko/views',
-            ['cache' => false]//__DIR__ . '/okashinotoriko/cache']
+            ['cache' => __DIR__ . '/okashinotoriko/cache']
         );
     }
 ]);

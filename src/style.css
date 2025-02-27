@@ -40,10 +40,10 @@ td img {
   height: 300px;
 }
 td.normal {
-  width: 15em;
+  width: 20em;
 }
 td.small {
-  width: 5em;
+  width: 10em;
 }
 button[type="submit"] {
   background-color: #ff9900;
